@@ -2,7 +2,7 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import blogs from '../services/blogs'
 
-const CreateBlog = ({ blogs, setBlogs }) => {
+const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -36,7 +36,11 @@ const CreateBlog = ({ blogs, setBlogs }) => {
     setNewAuthor('')
     setNewTitle('')
     setNewUrl('')
-    //send blog object to api and update blogs that are shown
+    setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+    setMessageStyle('message')
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   return (

@@ -4,12 +4,26 @@ import Login from './components/Login'
 import CreateBlog from './components/CreateBlog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
+
+const Notification = ({ message, messageStyle }) => {
+  if (message) {
+    return (
+      <div className={messageStyle}>
+        {message}
+      </div>
+    )
+  }
+}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageStyle, setMessageStyle] = useState('message')
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -39,10 +53,16 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      //setErrorMessage('Wrong credentials')
+      setMessage('Login successful')
+      setMessageStyle('message')
       setTimeout(() => {
-        //setErrorMessage(null)
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setMessage('Wrong credentials')
+      setMessageStyle('error')
+      setTimeout(() => {
+        setMessage(null)
       }, 5000)
     }
   }
@@ -55,20 +75,30 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <h2>Log in to application</h2>
-        <Login 
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
+        <Notification 
+          message={message}
+          messageStyle={messageStyle}
         />
+        <div>
+          <h2>Log in to application</h2>
+          <Login 
+            handleLogin={handleLogin}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+        </div>
       </div>
     )
   }
 
   return (
     <div>
+      <Notification 
+          message={message}
+          messageStyle={messageStyle}
+      />
       <h2>blogs</h2>
       <div>
         <p>{user.name} logged in </p>
@@ -78,6 +108,8 @@ const App = () => {
       <CreateBlog 
         blogs={blogs}
         setBlogs={setBlogs}
+        setMessage={setMessage}
+        setMessageStyle={setMessageStyle}
       />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
