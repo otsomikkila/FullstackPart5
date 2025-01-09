@@ -1,35 +1,48 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
-import { expect } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 
-test('renders blogs author and title but not url and likes', () => {
+describe('<Blog />', () => {
+  let container 
+
+  const testUser = {
+    username: 'otsoboy'
+  }
+
   const blog = {
     title: 'Component testing is done with react-testing-library',
     author: 'otso',
     likes: 10,
     url: 'moi/moi',
+    user: testUser
   }
 
-  render(<Blog blog={blog} />)
+  beforeEach(() => {
+    container = render(<Blog blog={blog} user={testUser} />).container
+  })
 
-  const element = screen.getByText('Component testing is done with react-testing-library otso')
+  test('renders blogs author and title but not url and likes', () => {
 
-  const { container } =  render(<Blog blog={blog} />)
+    const element = screen.getByText('Component testing is done with react-testing-library otso')
+  
+    const div = container.querySelector('.blog')
+  
+    expect(div).toHaveTextContent('Component testing is done with react-testing-library')
+    expect(div).toHaveTextContent('otso')
+    expect(div).not.toHaveTextContent('moi/moi')
+    expect(div).not.toHaveTextContent('likes')  
+    expect(element).toBeDefined()
+  })
+  
+  test('url and likes are shown after view button is clicked', async () => {  
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
 
-  const div = container.querySelector('.blog')
-
-  screen.debug(element)
-
-  expect(div).toHaveTextContent(
-    'Component testing is done with react-testing-library'
-  )
-
-  expect(div).toHaveTextContent('otso')
-
-  expect(div).not.toHaveTextContent('moi/moi')
-
-  expect(div).not.toHaveTextContent('likes')  
-
-  expect(element).toBeDefined()
-
+    const div = container.querySelector('.togglableContent')
+    expect(div).not.toHaveStyle('display: none')
+    expect(div).toHaveTextContent('moi/moi')
+    expect(div).toHaveTextContent('likes')
+  })
 })

@@ -47,10 +47,10 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   return (
     <div style={blogStyle} className='blog'>
       { visible ? (
-        <div>
+        <div className='togglableContent'>
           <TitleAndButton title={blog.title} author={blog.title} />
           <p>{blog.url}</p>
-          <p>like {likes} <button onClick={handleLike}>like</button></p>
+          <p>likes {likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.author}</p>
           {((user.username === blog.user.username)) && (
             <button onClick={handleRemove}>remove</button>
