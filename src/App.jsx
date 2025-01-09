@@ -20,7 +20,7 @@ const Notification = ({ message, messageStyle }) => {
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
   const [messageStyle, setMessageStyle] = useState('message')
@@ -28,7 +28,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -36,13 +36,13 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token)
+      blogService.setToken(user)
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username, password,
@@ -75,13 +75,13 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification 
+        <Notification
           message={message}
           messageStyle={messageStyle}
         />
         <div>
           <h2>Log in to application</h2>
-          <Login 
+          <Login
             handleLogin={handleLogin}
             username={username}
             setUsername={setUsername}
@@ -95,9 +95,9 @@ const App = () => {
 
   return (
     <div>
-      <Notification 
-          message={message}
-          messageStyle={messageStyle}
+      <Notification
+        message={message}
+        messageStyle={messageStyle}
       />
       <h2>blogs</h2>
       <div>
@@ -106,7 +106,7 @@ const App = () => {
       </div>
       <h2>create new</h2>
       <Togglable buttonLabel='new note'>
-        <CreateBlog 
+        <CreateBlog
           blogs={blogs}
           setBlogs={setBlogs}
           setMessage={setMessage}
@@ -114,7 +114,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog 
+        <Blog
           key={blog.id}
           blog={blog}
           blogs={blogs}

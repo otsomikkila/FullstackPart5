@@ -7,17 +7,14 @@ const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
   const [newUrl, setNewUrl] = useState('')
 
   const handleTitleChange = (event) => {
-    //console.log(event.target.value)
     setNewTitle(event.target.value)
   }
 
   const handleAuthorChange = (event) => {
-    //console.log(event.target.value)
     setNewAuthor(event.target.value)
   }
 
   const handleUrlChange = (event) => {
-    //console.log(event.target.value)
     setNewUrl(event.target.value)
   }
 
@@ -31,7 +28,10 @@ const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
 
     const returnedBlog = await blogService.createBlog(blogObject)
     //console.log('title', blogObject)
-    setBlogs(blogs.concat(returnedBlog))
+    //console.log(blogObject)
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
+    )
     setNewAuthor('')
     setNewTitle('')
     setNewUrl('')
@@ -44,31 +44,31 @@ const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
 
   return (
     <form onSubmit={addBlog}>
-        <div>
+      <div>
           title:
-            <input
-              value={newTitle}
-              onChange={handleTitleChange}
-            />
-        </div>
-        <div>
+        <input
+          value={newTitle}
+          onChange={handleTitleChange}
+        />
+      </div>
+      <div>
           author:
-            <input
-              value={newAuthor}
-              onChange={handleAuthorChange}
-            />
-        </div>
-        <div>
+        <input
+          value={newAuthor}
+          onChange={handleAuthorChange}
+        />
+      </div>
+      <div>
           url:
-            <input
-              value={newUrl}
-              onChange={handleUrlChange}
-            />
-        </div>
-        <div>
-          <button type="create">add</button>
-        </div>
-      </form>
+        <input
+          value={newUrl}
+          onChange={handleUrlChange}
+        />
+      </div>
+      <div>
+        <button type="create">add</button>
+      </div>
+    </form>
   )
 }
 

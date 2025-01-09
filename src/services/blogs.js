@@ -1,12 +1,10 @@
 import axios, { AxiosError } from 'axios'
-//import jwt from 'jsonwebtoken'
 const baseUrl = '/api/blogs'
 
 let token = null
 
-const setToken = newToken => {
-  token = `Bearer ${newToken}`
-  //console.log(token)
+const setToken = user => {
+  token = `Bearer ${user.token}`
 }
 
 //console.log(jwt.decode(token))
@@ -16,6 +14,7 @@ const getAll = async () => {
 }
 
 const createBlog = async newObject => {
+  //console.log(token)
   const config = {
     headers: { Authorization: token },
   }
