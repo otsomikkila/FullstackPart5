@@ -1,7 +1,7 @@
 import { useState, React } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,7 +10,7 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
   const [likes, setLikes] = useState(blog.likes)
 
 
@@ -19,8 +19,15 @@ const Blog = ({ blog }) => {
   }
 
   const handleLike = () => {
+    //backend
     blogService.addLike(blog, likes + 1)
+    //frontend
     setLikes(likes + 1)
+    //order
+    const newBlogs = blogs.map(n => 
+                                n.id === blog.id ? { ...n, likes: n.likes + 1} : n
+                              )
+    setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
   }
 
   const TitleAndButton = ({ title }) => {
