@@ -30,7 +30,7 @@ const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
     }
 
     const returnedBlog = await blogService.createBlog(blogObject)
-    console.log('title', blogObject)
+    //console.log('title', blogObject)
     setBlogs(blogs.concat(returnedBlog))
     setNewAuthor('')
     setNewTitle('')

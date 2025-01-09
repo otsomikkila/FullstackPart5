@@ -1,7 +1,8 @@
 import { useState, React } from 'react'
 import blogService from '../services/blogs'
+//import jwt from 'jsonwebtoken'
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,25 +10,33 @@ const Blog = ({ blog, blogs, setBlogs }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-
   const [visible, setVisible] = useState(true)
   const [likes, setLikes] = useState(blog.likes)
-
 
   const handleClick = () => {
     setVisible(!visible)
   }
 
   const handleLike = () => {
-    //backend
     blogService.addLike(blog, likes + 1)
-    //frontend
     setLikes(likes + 1)
-    //order
     const newBlogs = blogs.map(n => 
                                 n.id === blog.id ? { ...n, likes: n.likes + 1} : n
                               )
     setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
+  }
+
+  //adding a blog does not show remove buttong???
+  //refreshing does
+  //only compare ID's but then there is problem on how to get ID
+  //compare ID and username are both unique so use that??
+
+  const handleRemove = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      const newBlogs = blogs.filter(n => n.id !== blog.id) 
+      setBlogs(newBlogs)
+      blogService.deleteBlog(blog)
+    }
   }
 
   const TitleAndButton = ({ title }) => {
@@ -42,8 +51,11 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <div>  
           <TitleAndButton title={blog.title} />
           <p>{blog.url}</p>
-          <p>like {likes} <button onClick={() => handleLike()}>like</button></p>
+          <p>like {likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.author}</p>
+          {((user.username === blog.user.username) || (blog.user)) && (
+            <button onClick={handleRemove}>remove</button>
+          )}
         </div>
       ) : (
         <TitleAndButton title={blog.title} />
