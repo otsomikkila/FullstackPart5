@@ -38,17 +38,17 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     }
   }
 
-  const TitleAndButton = ({ title }) => {
+  const TitleAndButton = ({ title, author }) => {
     return (
-      <p>{title} <button onClick={() => handleClick()}>view</button> </p>
+      <p>{title} {author}<button onClick={() => handleClick()}>view</button> </p>
     )
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       { visible ? (
         <div>
-          <TitleAndButton title={blog.title} />
+          <TitleAndButton title={blog.title} author={blog.title} />
           <p>{blog.url}</p>
           <p>like {likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.author}</p>
@@ -57,7 +57,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
           )}
         </div>
       ) : (
-        <TitleAndButton title={blog.title} />
+        <TitleAndButton title={blog.title} author={blog.author}/>
       )}
     </div>
   )
