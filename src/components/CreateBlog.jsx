@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
+const CreateBlog = ({  setMessage, setMessageStyle, createBlog }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -25,13 +24,7 @@ const CreateBlog = ({ blogs, setBlogs, setMessage, setMessageStyle }) => {
       author: newAuthor,
       url: newUrl
     }
-
-    const returnedBlog = await blogService.createBlog(blogObject)
-    //console.log('title', blogObject)
-    //console.log(blogObject)
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )
+    createBlog(blogObject)
     setNewAuthor('')
     setNewTitle('')
     setNewUrl('')

@@ -67,6 +67,16 @@ const App = () => {
     }
   }
 
+  //erottaa createBlog erilleen jottei axios kutsua tarvitse tehdä
+
+  const createBlog = async (blog) => {
+    await blogService.createBlog(blog)
+
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
+    )
+  }
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
@@ -111,6 +121,7 @@ const App = () => {
           setBlogs={setBlogs}
           setMessage={setMessage}
           setMessageStyle={setMessageStyle}
+          createBlog={createBlog}
         />
       </Togglable>
       {blogs.map(blog =>

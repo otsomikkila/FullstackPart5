@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Blog, TitleAndButton } from './Blog'
-import { beforeEach, describe, expect, test } from 'vitest'
+import CreateBlog from './CreateBlog'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 describe('<Blog />', () => {
   let container 
@@ -47,7 +48,6 @@ describe('<Blog />', () => {
 
   test('if like button is clicked twice, the event handler is called twice', async () => {
     const mockHandler = vi.fn()
-    container = null
 
     render(
       <TitleAndButton blog={blog} toggleVisibility={mockHandler} buttonText={'test'}/>
@@ -57,5 +57,29 @@ describe('<Blog />', () => {
     await user.click(button)
     await user.click(button)
     expect(mockHandler.mock.calls).toHaveLength(2)
+  })
+
+  test('form calls event handler with right details', async () => {
+    const mockHandler = vi.fn()
+    const user = userEvent.setup()
+
+    render(<CreateBlog 
+            createBlog={mockHandler}
+            setMessage={() => 0}
+            setMessageStyle={() => 0}
+            />)
+
+    const inputs = screen.getAllByRole('textbox')
+    const sendButton = screen.getByText('add')
+
+    await user.type(inputs[0], 'testing a form...')
+    await user.type(inputs[1], 'testguy')
+    await user.type(inputs[2], '123/456')
+    await user.click(sendButton)
+
+    console.log('tääääää', mockHandler.mock.calls)
+
+    expect(mockHandler.mock.calls).toHaveLength(1)
+    expect(mockHandler.mock.calls[0][0].title).toBe('testing a form...')
   })
 })

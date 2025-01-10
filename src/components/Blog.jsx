@@ -44,7 +44,7 @@ export const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
+    <div style={blogStyle} className='blog' key={blog.id}>
       <TitleAndButton blog={blog} toggleVisibility={toggleVisibility} buttonText={'view'}/>
       <div className='togglableContent'>
         <div style={hideWhenVisible}></div>
