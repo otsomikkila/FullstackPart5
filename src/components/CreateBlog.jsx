@@ -36,7 +36,7 @@ const CreateBlog = ({  setMessage, setMessageStyle, createBlog }) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={addBlog} data-testid='blogform'>
       <div>
           title:
         <input
