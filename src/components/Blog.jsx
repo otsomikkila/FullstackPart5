@@ -1,7 +1,13 @@
 import { useState, React } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, user }) => {
+export const TitleAndButton = ({ blog, toggleVisibility, buttonText}) => {
+  return (
+    <p>{blog.title} {blog.author}<button className='toggleButton' onClick={toggleVisibility}>{buttonText}</button> </p>
+  )
+}
+
+export const Blog = ({ blog, blogs, setBlogs, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,10 +18,6 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
 
-  const handleClick = () => {
-    setVisible(!visible)
-  }
-
   const handleLike = () => {
     blogService.addLike(blog, likes + 1)
     setLikes(likes + 1)
@@ -24,10 +26,6 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     )
     setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
   }
-
-  //adding a blog does not show remove buttong???
-  //refreshing does
-  //only compare ID's but then there is problem on how to get ID
 
 
   const handleRemove = () => {
@@ -38,17 +36,19 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     }
   }
 
-  const TitleAndButton = ({ title, author }) => {
-    return (
-      <p>{title} {author}<button onClick={() => handleClick()}>view</button> </p>
-    )
+  const hideWhenVisible = { display: visible ? 'none' : '' }
+  const showWhenVisible = { display: visible ? '' : 'none' }
+
+  const toggleVisibility = () => {
+    setVisible(!visible)
   }
 
   return (
     <div style={blogStyle} className='blog'>
-      { visible ? (
-        <div className='togglableContent'>
-          <TitleAndButton title={blog.title} author={blog.title} />
+      <TitleAndButton blog={blog} toggleVisibility={toggleVisibility} buttonText={'view'}/>
+      <div className='togglableContent'>
+        <div style={hideWhenVisible}></div>
+        <div style={showWhenVisible}>
           <p>{blog.url}</p>
           <p>likes {likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.author}</p>
@@ -56,11 +56,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
             <button onClick={handleRemove}>remove</button>
           )}
         </div>
-      ) : (
-        <TitleAndButton title={blog.title} author={blog.author}/>
-      )}
+      </div>
     </div>
   )
 }
-
-export default Blog

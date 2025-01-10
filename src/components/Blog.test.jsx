@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Blog from './Blog'
+import { Blog, TitleAndButton } from './Blog'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 describe('<Blog />', () => {
@@ -23,15 +23,14 @@ describe('<Blog />', () => {
   })
 
   test('renders blogs author and title but not url and likes', () => {
-
+    screen.debug()
     const element = screen.getByText('Component testing is done with react-testing-library otso')
   
-    const div = container.querySelector('.blog')
+    const div = container.querySelector('.togglableContent')
+    expect(div).not.toHaveStyle('display: none')
   
-    expect(div).toHaveTextContent('Component testing is done with react-testing-library')
-    expect(div).toHaveTextContent('otso')
-    expect(div).not.toHaveTextContent('moi/moi')
-    expect(div).not.toHaveTextContent('likes')  
+    expect(element).toHaveTextContent('Component testing is done with react-testing-library')
+    expect(element).toHaveTextContent('otso')
     expect(element).toBeDefined()
   })
   
@@ -44,5 +43,19 @@ describe('<Blog />', () => {
     expect(div).not.toHaveStyle('display: none')
     expect(div).toHaveTextContent('moi/moi')
     expect(div).toHaveTextContent('likes')
+  })
+
+  test('if like button is clicked twice, the event handler is called twice', async () => {
+    const mockHandler = vi.fn()
+    container = null
+
+    render(
+      <TitleAndButton blog={blog} toggleVisibility={mockHandler} buttonText={'test'}/>
+    )
+    const user = userEvent.setup()
+    const button = screen.getByText('test')
+    await user.click(button)
+    await user.click(button)
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
