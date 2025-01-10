@@ -126,6 +126,7 @@ const App = () => {
       </Togglable>
       {blogs.map(blog =>
         <Blog
+          data-testid='blog'
           key={blog.id}
           blog={blog}
           blogs={blogs}

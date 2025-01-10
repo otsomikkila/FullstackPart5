@@ -40,6 +40,7 @@ const CreateBlog = ({  setMessage, setMessageStyle, createBlog }) => {
       <div>
           title:
         <input
+          data-testid='title'
           value={newTitle}
           onChange={handleTitleChange}
         />
@@ -47,6 +48,7 @@ const CreateBlog = ({  setMessage, setMessageStyle, createBlog }) => {
       <div>
           author:
         <input
+          data-testid='author'
           value={newAuthor}
           onChange={handleAuthorChange}
         />
@@ -54,6 +56,7 @@ const CreateBlog = ({  setMessage, setMessageStyle, createBlog }) => {
       <div>
           url:
         <input
+          data-testid='url'
           value={newUrl}
           onChange={handleUrlChange}
         />
