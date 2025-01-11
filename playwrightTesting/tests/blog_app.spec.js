@@ -12,6 +12,13 @@ describe('Blog app', () => {
         password: 'salasana'
       }
     })
+    await request.post('/api/users', {
+      data: {
+        name: 'Sisu',
+        username: 'sisuboy',
+        password: 'salasana2'
+      }
+    })
     await page.goto('/')
   })
 
@@ -57,7 +64,7 @@ describe('Blog app', () => {
 
         await expect(page.getByText('likes 1')).toBeVisible()
       })
-      test.only('user can delete own blog post', async ({ page }) => {
+      test('user can delete own blog post', async ({ page }) => {
         page.on('dialog', async (dialog) => {
           expect(dialog.type()).toBe('confirm'); // Ensure it's a confirm dialog
           expect(dialog.message()).toBe('Remove blog testi by OTSO'); // Check dialog message
@@ -68,7 +75,14 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'remove' }).click()
         await expect(page.getByText('testi OTSO')).not.toBeVisible()
       })
+      test.only('user can only see remove button on own blogs', async ({ page }) =>{
+        await createBlog(page, 'testi', 'OTSO', 'moi/testi')
+        await page.getByRole('button', { name: 'logout' }).click()
+        
+        await loginWith(page, 'sisuboy', 'salasana2')
+        await page.getByRole('button', { name: 'view' }).click()
+        await expect(page.getByText('remove')).not.toBeVisible()
+      })
     })
-    
   })
 })
