@@ -49,13 +49,24 @@ describe('Blog app', () => {
         await expect(page.getByText('testi OTSO')).toBeVisible()
       })
 
-      test.only('a blog can be liked', async ({ page }) => {
+      test('a blog can be liked', async ({ page }) => {
         await createBlog(page, 'testi', 'OTSO', 'moi/testi')
 
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByRole('button', { name: 'like' }).click()
 
         await expect(page.getByText('likes 1')).toBeVisible()
+      })
+      test.only('user can delete own blog post', async ({ page }) => {
+        page.on('dialog', async (dialog) => {
+          expect(dialog.type()).toBe('confirm'); // Ensure it's a confirm dialog
+          expect(dialog.message()).toBe('Remove blog testi by OTSO'); // Check dialog message
+          await dialog.accept(); // Accept the confirmation
+        })
+        await createBlog(page, 'testi', 'OTSO', 'moi/testi')
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'remove' }).click()
+        await expect(page.getByText('testi OTSO')).not.toBeVisible()
       })
     })
     
