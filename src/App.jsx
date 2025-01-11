@@ -50,6 +50,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
+      blogService.setToken(user)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -70,6 +71,7 @@ const App = () => {
   //erottaa createBlog erilleen jottei axios kutsua tarvitse tehdä
 
   const createBlog = async (blog) => {
+    //console.log(blog)
     await blogService.createBlog(blog)
 
     blogService.getAll().then(blogs =>
@@ -124,16 +126,17 @@ const App = () => {
           createBlog={createBlog}
         />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog
-          data-testid='blog'
-          key={blog.id}
-          blog={blog}
-          blogs={blogs}
-          setBlogs={setBlogs}
-          user={user}
-        />
-      )}
+      <div data-testid='blogs'>
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            user={user}
+          />
+        )}
+      </div>
     </div>
   )
 }

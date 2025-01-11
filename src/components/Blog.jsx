@@ -3,7 +3,7 @@ import blogService from '../services/blogs'
 
 export const TitleAndButton = ({ blog, toggleVisibility, buttonText}) => {
   return (
-    <p>{blog.title} {blog.author}<button className='toggleButton' onClick={toggleVisibility}>{buttonText}</button> </p>
+    <p data-testid='view'>{blog.title} {blog.author}<button className='toggleButton' onClick={toggleVisibility}>{buttonText}</button> </p>
   )
 }
 
