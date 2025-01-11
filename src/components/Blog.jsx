@@ -3,7 +3,7 @@ import blogService from '../services/blogs'
 
 export const TitleAndButton = ({ blog, toggleVisibility, buttonText}) => {
   return (
-    <p data-testid='view'>{blog.title} {blog.author}<button className='toggleButton' onClick={toggleVisibility}>{buttonText}</button> </p>
+    <p data-testid='view'>{blog.title} {blog.author}<button data-testid={`view ${blog.title}`} onClick={toggleVisibility}>{buttonText}</button> </p>
   )
 }
 
@@ -44,13 +44,13 @@ export const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog' key={blog.id}>
+    <div style={blogStyle} data-testid='blog'>
       <TitleAndButton blog={blog} toggleVisibility={toggleVisibility} buttonText={'view'}/>
       <div className='togglableContent'>
         <div style={hideWhenVisible}></div>
         <div style={showWhenVisible}>
           <p>{blog.url}</p>
-          <p>likes {likes} <button onClick={handleLike}>like</button></p>
+          <p>likes {likes} <button onClick={handleLike} data-testid={`like ${blog.title}`}>like</button></p>
           <p>{blog.author}</p>
           {((user.username === blog.user.username)) && (
             <button onClick={handleRemove}>remove</button>

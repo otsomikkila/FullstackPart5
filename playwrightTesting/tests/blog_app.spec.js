@@ -1,6 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 import { request } from 'http'
-import { loginWith, createBlog } from './helper'
+import { loginWith, createBlog, likeBlog } from './helper'
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -58,11 +58,10 @@ describe('Blog app', () => {
 
       test('a blog can be liked', async ({ page }) => {
         await createBlog(page, 'testi', 'OTSO', 'moi/testi')
+        await page.getByTestId('view testi').click()
 
-        await page.getByRole('button', { name: 'view' }).click()
-        await page.getByRole('button', { name: 'like' }).click()
-
-        await expect(page.getByText('likes 1')).toBeVisible()
+        await likeBlog(page, 'testi', 2)
+        await expect(page.getByText('likes 2')).toBeVisible()
       })
       test('user can delete own blog post', async ({ page }) => {
         page.on('dialog', async (dialog) => {
@@ -75,7 +74,33 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'remove' }).click()
         await expect(page.getByText('testi OTSO')).not.toBeVisible()
       })
-      test.only('user can only see remove button on own blogs', async ({ page }) =>{
+      test.only('user sees the list of blogs in the order of likes', async ({ page }) =>{
+        await createBlog(page, 'testi1', 'OTSO', 'moi/testi')
+        await createBlog(page, 'testi2', 'OTSO', 'moi/testi')
+        await createBlog(page, 'testi3', 'OTSO', 'moi/testi')
+
+        await page.getByTestId('view testi1').click()
+        await page.getByTestId('view testi2').click()
+        await page.getByTestId('view testi3').click()
+
+        await likeBlog(page, 'testi1', 1)
+        await likeBlog(page, 'testi2', 4)
+        await likeBlog(page, 'testi3', 2)
+
+        const blogs = await page.getByTestId('blog').all()
+        expect(blogs[0].getByText('testi2')).toBeVisible
+        expect(blogs[1].getByText('testi3')).toBeVisible
+        expect(blogs[2].getByText('testi1')).toBeVisible
+
+        expect(blogs[0].getByText('testi1')).not.toBeVisible
+        expect(blogs[1].getByText('testi2')).not.toBeVisible
+        expect(blogs[2].getByText('testi2')).not.toBeVisible
+
+        expect(blogs[0].getByText('testi3')).not.toBeVisible
+        expect(blogs[1].getByText('testi1')).not.toBeVisible
+        expect(blogs[2].getByText('testi3')).not.toBeVisible
+      })
+      test('user can only see remove button on own blogs', async ({ page }) =>{
         await createBlog(page, 'testi', 'OTSO', 'moi/testi')
         await page.getByRole('button', { name: 'logout' }).click()
         
